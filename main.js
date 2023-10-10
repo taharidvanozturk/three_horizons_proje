@@ -29,9 +29,10 @@ function fetchAndUpdateLocations(userCoordinates) {
 
       // Display the user's location
       const userFeature = new Feature({
-        geometry: new Point(userCoordinates),
+        geometry: new Point(userCoordinates).transform('EPSG:4326', 'EPSG:3857'),
         name: 'Your Location',
     });
+    console.log(userCoordinates);
     userFeature.setStyle(userLocationStyle);
     vectorSource.addFeature(userFeature);
 
