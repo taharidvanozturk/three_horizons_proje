@@ -1,6 +1,8 @@
 {
   "name": "icon",
   "dependencies": {
+    "axios": "^1.5.1",
+    "esdk-obs-nodejs": "^3.23.9",
     "ol": "8.1.0"
   },
   "devDependencies": {

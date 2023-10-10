@@ -9,6 +9,7 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import OSM from "ol/source/OSM.js";
 import { fromLonLat } from "ol/proj";
 
+var puan=0;
 const apiKey = "AIzaSyANhDjKBjhiCGBlbkCSA-ttdHiKgn0LOyI";
 const vectorSource = new VectorSource();
 
@@ -25,12 +26,12 @@ const userLocationStyle = new Style({
 		anchorXUnits: "fraction",
 		anchorYUnits: "pixels",
 		src: "user_icon.png",
-		scale: 0.5,
+		scale: 0.6,
 	}),
 });
 
 function fetchAndUpdateLocations(userCoordinates) {
-	const circleRadius = 0.007;
+	const circleRadius = 0.006;
 	vectorSource.clear();
 
 	// Display the user's location
@@ -93,6 +94,7 @@ function fetchAndUpdateLocations(userCoordinates) {
             placement: 'top',
             trigger: 'manual'  // this ensures the popover is controlled programmatically
         });
+		puan=puan+10;
         console.log(puan);
         // Show the popover
         popoverInstance.show();
@@ -121,7 +123,7 @@ document
 		const newLongitude = parseFloat(document.getElementById("longitude").value);
 		const newUserCoordinates = [newLongitude, newLatitude];
 
-		const circleRadius = 0.007;
+		const circleRadius = 0.006;
 		const isInside = isPointInsideCircle(
 			newUserCoordinates,
 			newUserCoordinates,
@@ -151,8 +153,8 @@ const vectorLayer = new VectorLayer({
 	source: vectorSource,
 	style: function (feature, resolution) {
 		const zoom = map.getView().getZoom();
-		const iconScale = Math.min(1, zoom / 10);
-		const circleRadius = Math.min(0.01, zoom / 10);
+		const iconScale = Math.min(1, zoom / 50);
+		const circleRadius = Math.min(0.01, zoom / 50);
 
 		return [
 			new Style({
@@ -197,7 +199,7 @@ const map = new Map({
 	view: new View({
 		projection: "EPSG:3857",
 		center: [0, 0],
-		zoom: 3,
+		zoom: 12,
 	}),
 });
 
