@@ -13,7 +13,7 @@ let currentTime = new Date();
 currentTime.setUTCHours(currentTime.getUTCHours() + currentTimeOffset);
 currentTime = currentTime.toUTCString();
 console.log("Current Time:", currentTime);
-app.get('/getImagesList/.png', (req, res) => {
+app.post('/getImagesList/.png', (req, res) => {
     let objectName =".png";
     fetchFromOBS(currentTime, objectName, res);
 });
@@ -34,12 +34,12 @@ function fetchFromOBS(currentTime, objectName, res) {
 
     axios({
         method: "get",
-        url: `https://btk-maraton.obs.tr-west-1.myhuaweicloud.com/${objectName}`,
-        headers: {
+        url: `https://btk-maraton.obs.tr-west-1.myhuaweicloud.com/.png`,
+      /*  headers: {
     'Content-Type': 'image/png',  // Corrected Content-Type header
             Authorization: "OBS " + accessKey + ":" + signature,
             Date: currentTime,
-        },
+        },*/
         responseType: 'stream'  // important to set this for streaming
     })
     .then(function (response) {
@@ -53,7 +53,7 @@ function fetchFromOBS(currentTime, objectName, res) {
         res.status(500).send('Failed to fetch the image.');
     });
 }
-
+    
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });
