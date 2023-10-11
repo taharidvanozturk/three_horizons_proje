@@ -9,6 +9,9 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import OSM from "ol/source/OSM.js";
 import { fromLonLat } from "ol/proj";
 
+
+let currentLocationName = ""; 
+
 document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("cameraFeed").style.display = "block";
 
@@ -47,6 +50,9 @@ document.addEventListener("DOMContentLoaded", function () {
 				const height = width / aspectRatio;
 				context.drawImage(video, 0, 0, width, height);
 				const dataURL = canvas.toDataURL();
+		
+				sendImageDataToServer(dataURL, currentLocationName); // Move this line here after dataURL is defined
+		
 				const link = document.createElement("a");
 				link.download = "photo.png";
 				link.href = dataURL;
@@ -54,7 +60,20 @@ document.addEventListener("DOMContentLoaded", function () {
 				const photoElement = document.createElement("img");
 				photoElement.src = dataURL;
 				document.body.appendChild(photoElement);
+	
 			}
+		});
+	}
+	function sendImageDataToServer(imageData, locationName) {
+		axios.post('http://localhost:3000/upload', {
+			image: imageData,
+			location: locationName
+		})
+		.then(response => {
+			console.log(response);
+		})
+		.catch(error => {
+			console.log("Error uploading image:", error);
 		});
 	}
 	const stopVideoButton = document.getElementById("stopVideo");
@@ -170,6 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					}
 
 					if (isInside) {
+						currentLocationName = name;
 						console.log(`${name} is inside the circular area.`);
 
 						const popoverElement = document.getElementById("insidePopover");
