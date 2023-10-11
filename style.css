@@ -1,142 +1,156 @@
 @import "node_modules/ol/ol.css";
 
-html, body {
-  margin: 0;
-  height: 100%;
+html,
+body {
+	margin: 0;
+	height: 100%;
 }
 
 #map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 100%;
 }
 
 .popover {
-  max-width: 500px;
+	max-width: 500px;
 }
 
 .container {
-  max-width: 500px;
+	max-width: 500px;
 }
 
 .title {
-  font-size: 40px !important;
-  text-align: center;
-  border-bottom: #476598ba solid 3px;
-  margin-bottom: 20px;
+	font-size: 40px !important;
+	text-align: center;
+	border-bottom: #476598ba solid 3px;
+	margin-bottom: 20px;
 }
 
 .date {
-  text-align: center;
-  margin-bottom: 20px;
+	text-align: center;
+	margin-bottom: 20px;
 }
 
 .kamera {
-  border: #476598ba dashed 3px;
-  border-radius: 15px;
-  padding: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-  flex-direction: row;
-  margin-bottom: 20px;
+	border: #476598ba dashed 3px;
+	border-radius: 15px;
+	padding: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	text-align: center;
+	flex-direction: row;
+	margin-bottom: 20px;
 }
 
-.kamera  {
-  display: flex;
-  width: 90%;
-  flex-direction: row;
-  border-radius: 10px;
+.kamera {
+	display: flex;
+	width: 90%;
+	flex-direction: row;
+	border-radius: 10px;
 }
 
 .subunit {
-  transition: all 0.3s;
-  display: flex;
-  width: 33%;
-  flex-direction: column;
-  background-color: #476598ba;
-  border-radius: 10px;
-  margin: 5px;
-  padding: 5px;
+	transition: all 0.3s;
+	display: flex;
+	width: 33%;
+	flex-direction: column;
+	background-color: #476598ba;
+	border-radius: 10px;
+	margin: 5px;
+	padding: 5px;
 }
 
 .embed-responsive-item {
-  width: 90%;
-  height: 90%;
+	width: 90%;
+	height: 90%;
 }
 
 .weather {
-  border: #476598ba dashed 3px;
-  border-radius: 15px;
-  padding: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-  flex-direction: row;
-  margin-bottom: 40px;
+	border: #476598ba dashed 3px;
+	border-radius: 15px;
+	padding: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	text-align: center;
+	flex-direction: row;
+	margin-bottom: 40px;
 }
 
 .weather .subunit {
-  .wi {
-    font-size: 2em;
-    margin-bottom: 5px;
-  }
-  .weather_data {
-    font-size: 1.5em;
-  }
-  transition: all 0.3s;
-  display: flex;
-  width: 33%;
-  flex-direction: column;
-  background-color: #476598ba;
-  border-radius: 10px;
-  margin: 5px;
-  padding: 5px;
+	.wi {
+		font-size: 2em;
+		margin-bottom: 5px;
+	}
+	.weather_data {
+		font-size: 1.5em;
+	}
+	transition: all 0.3s;
+	display: flex;
+	width: 33%;
+	flex-direction: column;
+	background-color: #476598ba;
+	border-radius: 10px;
+	margin: 5px;
+	padding: 5px;
 }
 
 .subunit:hover {
-  background-color: aqua;
-  transition: all 0.3s;
+	background-color: aqua;
+	transition: all 0.3s;
 }
 
 .wi-strong-wind {
-  rotate: 90deg;
+	rotate: 90deg;
 }
 
 .parameters {
-  width: 95%;
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  margin: 0 auto;
-  align-items: center;
-  flex-direction: row;
-  border: #476598ba groove 3px;
-  border-radius: 10px;
-  margin: 5px;
-  padding: 5px;
+	width: 95%;
+	flex-wrap: wrap;
+	display: flex;
+	justify-content: center;
+	margin: 0 auto;
+	align-items: center;
+	flex-direction: row;
+	border: #476598ba groove 3px;
+	border-radius: 10px;
+	margin: 5px;
+	padding: 5px;
 }
 
 .parameters .subPara {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 5px;
-  transition: all 0.3s;
-  background-color: #476598ba;
-  border-radius: 10px;
-  padding: 5px;
-  flex: 33%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 5px;
+	transition: all 0.3s;
+	background-color: #476598ba;
+	border-radius: 10px;
+	padding: 5px;
+	flex: 33%;
 }
 
 .parameters .weather_data {
-  font-size: 1.5em;
+	font-size: 1.5em;
 }
 
 .subPara:hover {
-  background-color: aqua;
-  transition: all 0.3s;
+	background-color: aqua;
+	transition: all 0.3s;
+}
+
+#cameraFeed {
+	border: 3px solid #ddd;
+	margin-bottom: 10px;
+}
+
+#capturePhoto {
+	margin-bottom: 10px;
+}
+
+#cameraFeed {
+	display: none;
 }
