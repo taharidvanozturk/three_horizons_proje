@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentTime = new Date();
     currentTime.setUTCHours(currentTime.getUTCHours() + currentTimeOffset);
     currentTime = currentTime.toUTCString();
-    console.log("Current Time:", currentTime);    fetch('http://localhost:3000/getImagesList')  // Port number is specified as 3000.
+    console.log("Current Time:", currentTime);    
+    
+    fetch('http://localhost:3000/getObject')  // Port number is specified as 3000.
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok.');
