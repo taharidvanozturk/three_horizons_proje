@@ -1,78 +1,71 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
 const axios = require("axios");
 const fs = require("fs");
 const crypto = require("crypto");
-const cors = require('cors');
+const cors = require("cors");
 const app = express();
-
-app.use(bodyParser.json({ limit: '10mb' }));
+let currentTime = new Date().toUTCString();
+app.use(bodyParser.json({ limit: "10mb" }));
 app.use(cors());
-
+app.post('/setCurrentTime', (req, res) => {
+    let receivedDate = new Date(req.body.currentTime);
+    let adjustedDate = new Date(receivedDate.getTime() + 3 * 60 * 60 * 1000); // 3 saat ekleniyor
+    currentTime = adjustedDate.toUTCString();
+    console.log("Received and Converted Current Time:", currentTime);
+    res.send({ status: 'success' });
+});
+console.log("Current Time:", currentTime);
 // Your Access Key and Secret Key
-const accessKey = "RHNJIZWSOXKFCUDZYMDX";
-const secretKey = "KNxGGXzXb4AElaRbr0zga5xIazFGsqUGDehj4wO6";
+const accessKey = "UEZH2HJM6NR0GWUGKTHT";
+const secretKey = "b9fp5CZh6iwZDDuC0CN6DKeuRIx5n5o6uMDBoYVC";
 
-app.post('/upload', (req, res) => {
-	console.log("Received request at /upload with data:", req.body);
+let counter = 1; // Sayaç başlangıcı
+
+app.post("/upload", (req, res) => {
+    if(!currentTime) {
+        return res.status(400).send("currentTime is not set yet.");
+    }
+    console.log("Received request at /upload with data:", req.body);
     let image = req.body.image;
     let locationName = req.body.location;
 
-    let data = Buffer.from(image.split(",")[1], 'base64');
-    let objectName = locationName + '.png';
-    
+    let data = Buffer.from(image.split(",")[1], "base64");
+    let objectName = locationName + ".png";
+
     uploadToOBS(data, objectName);
     res.send("Image uploaded successfully.");
 });
 
 function uploadToOBS(data, objectName) {
-    let stringToSign = "PUT\n\n" + "image/png\n" + new Date().toUTCString() + "\n/btk-maraton/" + objectName;
-    let hmac = crypto.createHmac('sha1', secretKey);
+    let stringToSign =
+        "PUT\n\n" +
+        "image/png\n" +
+        currentTime + // Güncellenmiş zamanı burada kullan
+        "\n/btk-maraton/" +
+        objectName;
+    let hmac = crypto.createHmac("sha1", secretKey);
     hmac.update(stringToSign);
-    let signature = hmac.digest('base64');
+    let signature = hmac.digest("base64");
 
     axios({
-        method: 'put',
+        method: "put",
         url: `https://btk-maraton.obs.tr-west-1.myhuaweicloud.com/${objectName}`,
         headers: {
-            'Content-Type': 'image/png',
-            'Authorization': "OBS " + accessKey + ":" + signature,
-            'Date': new Date().toUTCString(),
+            "Content-Type": "image/png",
+            Authorization: "OBS " + accessKey + ":" + signature,
+            Date: currentTime,
         },
-        data: data
+        data: data,
     })
-    .then(function(response) {
-        console.log(response);
-    })
-    .catch(function(error) {
-        console.log(error);
-    });
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 app.listen(3000, () => {
     console.log("Server running on port 3000");
-});
-
-// This is the second part of your code, that reads a file and sends it to Huawei Cloud OBS.
-let data = fs.readFileSync("C:/Users/taha/Desktop/bir_huawei_laptopa_ihtiyacim_var/biat_degil_ibadet_edeceksiniz.txt", "utf8");
-let stringToSign = "PUT\n\n" + "text/plain\n" + new Date().toUTCString() + "\n/btk-maraton/object01";
-let hmac = crypto.createHmac("sha1", secretKey);
-hmac.update(stringToSign);
-let signature = hmac.digest("base64");
-
-axios({
-    method: "put",
-    url: "https://btk-maraton.obs.tr-west-1.myhuaweicloud.com/object01",
-    headers: {
-        "Content-Type": "text/plain",
-        Authorization: "OBS " + accessKey + ":" + signature,
-        Date: new Date().toUTCString(),
-    },
-    data: data,
-})
-.then(function (response) {
-    console.log(response);
-})
-.catch(function (error) {
-    console.log(error);
 });

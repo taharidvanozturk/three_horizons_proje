@@ -13,6 +13,16 @@ import { fromLonLat } from "ol/proj";
 let currentLocationName = ""; 
 
 document.addEventListener("DOMContentLoaded", function () {
+	// Zamanı güncelleme fonksiyonu (şu an için sadece konsola yazdırıyor)
+function updateCurrentTime() {
+	const currentTime = new Date().toUTCString();
+	console.log("Current Time:", currentTime);
+  }
+  
+  // Her 10 saniyede bir fonksiyonları çağır
+  setInterval(() => {
+	updateCurrentTime(); 
+  }, 10000); // 10000 milisaniye = 10 saniye
 	document.getElementById("cameraFeed").style.display = "block";
 
 	// Kamera erişimi
@@ -40,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	accessCamera();
 	const capturePhotoButton = document.getElementById("capturePhoto");
 	if (capturePhotoButton) {
+		sendCurrentTimeToBackend();
 		capturePhotoButton.addEventListener("click", function () {
 			const video = document.getElementById("cameraFeed");
 			const canvas = document.getElementById("photoCanvas");
@@ -378,6 +389,24 @@ document.addEventListener("DOMContentLoaded", function () {
 				console.error("Geolocation is not supported by this browser.");
 			}
 		});
+		function sendCurrentTimeToBackend() {
+			const currentTime = new Date().toUTCString();
+		
+			fetch('http://localhost:3000/setCurrentTime', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ currentTime: currentTime }),
+			})
+			.then(response => response.json())
+			.then(data => {
+				console.log("Response from backend:", data);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+		}
 
 	map.on("movestart", disposePopover);
 });
