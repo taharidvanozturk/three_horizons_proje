@@ -36,7 +36,7 @@ function fetchFromOBS(currentTime, objectName, res) {
         method: "get",
         url: `https://btk-maraton.obs.tr-west-1.myhuaweicloud.com/${objectName}`,
         headers: {
-            'Content-Type': "image/png",  
+    'Content-Type': 'image/png',  // Corrected Content-Type header
             Authorization: "OBS " + accessKey + ":" + signature,
             Date: currentTime,
         },
