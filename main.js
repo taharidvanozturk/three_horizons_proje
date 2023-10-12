@@ -8,6 +8,7 @@ import { OGCMapTile, Vector as VectorSource } from "ol/source.js";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import OSM from "ol/source/OSM.js";
 import { fromLonLat } from "ol/proj";
+import imageCompression from 'browser-image-compression';
 
 
 let currentLocationName = ""; 
@@ -15,7 +16,7 @@ let currentLocationName = "";
 document.addEventListener("DOMContentLoaded", function () {
 	// Zamanı güncelleme fonksiyonu (şu an için sadece konsola yazdırıyor)
 function updateCurrentTime() {
-	const currentTime = new Date().toUTCString();
+	const currentTime = new Date();
 	console.log("Current Time:", currentTime);
   }
   
@@ -49,44 +50,38 @@ function updateCurrentTime() {
 	}
 	accessCamera();
 	const capturePhotoButton = document.getElementById("capturePhoto");
-	if (capturePhotoButton) {
-		sendCurrentTimeToBackend();
-		capturePhotoButton.addEventListener("click", function () {
-			const video = document.getElementById("cameraFeed");
-			const canvas = document.getElementById("photoCanvas");
-			if (canvas) {
-				const context = canvas.getContext("2d");
-				const aspectRatio = video.videoWidth / video.videoHeight;
-				const width = 300;
-				const height = width / aspectRatio;
-				context.drawImage(video, 0, 0, width, height);
-				const dataURL = canvas.toDataURL();
-		
-				sendImageDataToServer(dataURL, currentLocationName); // Move this line here after dataURL is defined
-		
-				const link = document.createElement("a");
-				link.download = "photo.png";
-				link.href = dataURL;
-				link.click();
-				const photoElement = document.createElement("img");
-				photoElement.src = dataURL;
-				document.body.appendChild(photoElement);
-	
-			}
-		});
-	}
-	function sendImageDataToServer(imageData, locationName) {
-		axios.post('http://localhost:3000/upload', {
-			image: imageData,
-			location: locationName
-		})
-		.then(response => {
-			console.log(response);
-		})
-		.catch(error => {
-			console.log("Error uploading image:", error);
-		});
-	}
+if (capturePhotoButton) {
+	sendCurrentTimeToBackend();
+	capturePhotoButton.addEventListener("click", function () {
+		const video = document.getElementById("cameraFeed");
+		const canvas = document.getElementById("photoCanvas");
+		if (canvas) {
+			const context = canvas.getContext("2d");
+			const aspectRatio = video.videoWidth / video.videoHeight;
+			const width = 300;
+			const height = width / aspectRatio;
+			context.drawImage(video, 0, 0, width, height);
+			compressAndSendImage(canvas);
+			console.log(Date.now());
+
+		}
+	});
+}
+async function compressAndSendImage(canvas) {
+	const blob = await canvasToBlob(canvas);
+	const compressedBlob = await imageCompression(blob, { maxSizeMB: 1 });
+	const formData = new FormData();
+	formData.append('image', compressedBlob);
+	axios.post('http://localhost:3000/uploadImage', formData);
+ }
+ 
+ function canvasToBlob(canvas) {
+	return new Promise((resolve) => {
+	   canvas.toBlob((blob) => {
+		  resolve(blob);
+	   });
+	});
+ }
 	const stopVideoButton = document.getElementById("stopVideo");
 	if (stopVideoButton) {
 		stopVideoButton.addEventListener("click", function () {
